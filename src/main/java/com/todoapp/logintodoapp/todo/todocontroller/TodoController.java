@@ -21,11 +21,6 @@ public class TodoController {
 
     @Autowired
     private TodoService todoService;
-    
-    // @PostMapping("addtodo")
-    // public ResponseEntity<Todo> addTodo(Todo todo) {
-    //     return ResponseEntity.ok(todoService.addTodo(todo));  
-    // }
 
     @PostMapping("addtodo")
     public String addTodo(Todo todo, Model model) {
@@ -41,7 +36,6 @@ public class TodoController {
 
     @PostMapping("updatetodo/{id}")
     public String updateTodo(@PathVariable("id") Long id, Todo todo, Model model) {
-        // return ResponseEntity.ok(todoService.updateTodo(todo));
         todoService.updateTodo(todo);
         model.addAttribute("todoList", todoService.fetchAllTodos());
         return "redirect:/todolist";
@@ -49,7 +43,6 @@ public class TodoController {
 
     @PostMapping("deletetodo/{id}")
     public String deleteTodo(@PathVariable("id") Long id, Model model) {
-        // return ResponseEntity.ok(todoService.deleteTodo(id));
         todoService.deleteTodo(id);
         model.addAttribute("todoList", todoService.fetchAllTodos());
         return "redirect:/todolist";
