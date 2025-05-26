@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="webjars/bootstrap/css/bootstrap.min.css"
+        />
+        <title>Registration</title>
+    </head>
+    <body>
+        <div class="container text-center">
+            <div><h1>Register User</h1></div>
+            <form
+                th:action="@{/process_register}"
+                method="post"
+                th:object="${users}"
+                style="max-width: 600px; margin: 0 auto"
+            >
+                <div class="m-3">
+                    <div class="form-group row" style="padding: 5px">
+                        <label class="col-form-label col-4">User Name:</label>
+                        <div class="col-8">
+                            <input
+                                class="form-control"
+                                type="text"
+                                th:field="*{userName}"
+                                required
+                            />
+                        </div>
+                    </div>
+                    <div class="form-group row" style="padding: 5px">
+                        <label class="col-form-label col-4">Email:</label>
+                        <div class="col-8">
+                            <input
+                                class="form-control"
+                                type="email"
+                                th:field="*{email}"
+                                required
+                            />
+                        </div>
+                    </div>
+                    <div class="form-group row" style="padding: 5px">
+                        <label class="col-form-label col-4">Password:</label>
+                        <div class="col-8">
+                            <input
+                                class="form-control"
+                                type="password"
+                                th:field="*{password}"
+                                required
+                                minlength="2"
+                                maxlength="30"
+                            />
+                            <div class="form-check mt-2 text-start">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    id="showPassword"
+                                    onclick="togglePassword()"
+                                />
+                                <label
+                                    class="form-check-label"
+                                    for="showPassword"
+                                    >Show Password</label
+                                >
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row" style="padding: 5px">
+                        <label class="col-form-label col-4">First Name:</label>
+                        <div class="col-8">
+                            <input
+                                class="form-control"
+                                type="text"
+                                th:field="*{firstName}"
+                                required
+                                minlength="2"
+                                maxlength="20"
+                            />
+                        </div>
+                    </div>
+                    <div class="form-group row" style="padding: 5px">
+                        <label class="col-form-label col-4">Last Name:</label>
+                        <div class="col-8">
+                            <input
+                                class="form-control"
+                                type="text"
+                                th:field="*{lastName}"
+                                required
+                                minlength="2"
+                                maxlength="20"
+                            />
+                        </div>
+                    </div>
+                    <div class="m-3">
+                        <button class="btn btn-primary">Sign Up</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </body>
+    <script>
+        function togglePassword() {
+            var pwd = document.getElementById("password");
+            pwd.type = pwd.type === "password" ? "text" : "password";
+        }
+    </script>
+</html>
