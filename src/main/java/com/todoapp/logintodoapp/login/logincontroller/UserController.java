@@ -1,67 +1,47 @@
 package com.todoapp.logintodoapp.login.logincontroller;
 
-import java.security.Principal;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.todoapp.logintodoapp.login.jwtutil.JwtUtil; // Import JwtUtil
 import com.todoapp.logintodoapp.login.loginentity.Users;
-import com.todoapp.logintodoapp.login.loginrepository.UserRepository;
-import com.todoapp.logintodoapp.todo.service.TodoService;
-import com.todoapp.logintodoapp.todo.todoentity.Todo;
+import com.todoapp.logintodoapp.login.loginservice.UserService;
+import com.todoapp.logintodoapp.login.requests.AuthRequest;
+import com.todoapp.logintodoapp.login.requests.AuthResponse;
+import com.todoapp.logintodoapp.login.requests.RegisterRequest;
+import org.springframework.web.bind.annotation.RequestBody;
 
-import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import org.springframework.ui.Model;
+import java.util.Date; // Import Date
 
-@Controller
+@RestController
+@RequestMapping("/auth")
 public class UserController {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
-    @GetMapping("")
-    public String homePage() {
-        return "home";
+    @Autowired // Autowire JwtUtil
+    private JwtUtil jwtUtil;
+
+    @CrossOrigin(origins = "http://localhost:4200")
+    @PostMapping("/register")
+    public ResponseEntity<Users> registerUser(@Valid @RequestBody RegisterRequest request) {
+        Users registeredUser = userService.registerUser(request);
+        return ResponseEntity.ok(registeredUser);
     }
 
-    @GetMapping("/login")
-    public String loginPage(HttpServletRequest request, Principal principal) {
-        if (principal != null) {
-            String redirectUrl = request.getContextPath() + "/todolist";
-            return "redirect:" + redirectUrl;
-        }
-        return "login";
+    @CrossOrigin(origins = "http://localhost:4200")
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponse> authenticateUser(@Valid @RequestBody AuthRequest request) {
+        String token = userService.authenticate(request);
+        Date expirationDate = jwtUtil.extractExpirationDate(token); // Extract expiration date from the token
+        // Pass token and expiration timestamp (in milliseconds) to AuthResponse
+        return ResponseEntity.ok(new AuthResponse(token, expirationDate.getTime()));
     }
-
-    @GetMapping("/register")
-    public String signUp(Model model) {
-        model.addAttribute("users", new Users());
-        return "signup";
-    }
-
-    @PostMapping("/process_register")
-    public String processRegistration(Users users) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String encodedPassword = passwordEncoder.encode(users.getPassword());
-        users.setPassword(encodedPassword);
-        userRepository.save(users);
-        return "register_success";
-    }
-
-    @Autowired
-    private TodoService todoService;
-
-    @GetMapping("/todolist")
-    public String todoList(Model model) {
-        List<Todo> todoList = todoService.findAll();
-        model.addAttribute("todoList", todoList);
-        return "todolist";
-    }
-
-
-
 }

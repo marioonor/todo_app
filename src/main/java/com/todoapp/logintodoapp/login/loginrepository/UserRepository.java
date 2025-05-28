@@ -1,12 +1,16 @@
 package com.todoapp.logintodoapp.login.loginrepository;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import com.todoapp.logintodoapp.login.loginentity.Users;
 
-public interface UserRepository extends JpaRepository<Users, Long> { 
+@Repository
+public interface UserRepository extends JpaRepository<Users, Long> {
 
-    @Query("SELECT u FROM Users u WHERE u.email = ?1")
-    Users findByEmail(String email);
+    Optional<Users> findByUsername(String username);
+
+    Optional<Users> findByEmail(String email);
 }

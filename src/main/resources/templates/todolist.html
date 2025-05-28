@@ -14,11 +14,25 @@
         <div class="container text-center">
             <!-- Logout and Welcome -->
             <div>
-                <form th:action="@{/logout}" method="post">
-                    <p>
-                        Welcome <b>[[${#authentication.principal.FirstName}]]</b>
-                    </p>
-                    <input type="submit" value="Sign Out" />
+                <form
+                    class="d-flex justify-content-between align-items-center mb-4" 
+                    style="margin: 20px;"
+                    th:action="@{/logout}"
+                    method="post"
+                >
+                    <img src="/images/image.png" style="height: 60px; width: 60px;" alt="ToDo App Banner" class="image" />
+
+                    <h4 class="mb-0">
+                        <b class="text-primary"
+                            >[[${#authentication.principal.FirstName}]]</b
+                        >
+                    </h4>
+
+                    <form th:action="@{/logout}" method="post" class="mb-0">
+                        <button type="submit" class="btn btn-outline-danger">
+                            Sign Out
+                        </button>
+                    </form>
                 </form>
             </div>
 
@@ -30,6 +44,7 @@
                 class="btn btn-success mb-3"
                 data-bs-toggle="modal"
                 data-bs-target="#addTodoModal"
+                style="width: 200px; text-align: center; font-size: 16px;"
             >
                 Add Todo
             </button>
@@ -46,7 +61,7 @@
                     <div class="modal-content">
                         <form th:action="@{/addtodo}" method="post">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="addTodoModalLabel">
+                                <h5 class="modal-title" id="addTodoModalLabel" style="text-align: left;">
                                     Add Todo
                                 </h5>
                                 <button
@@ -58,7 +73,7 @@
                             </div>
                             <div class="modal-body">
                                 <div class="mb-3">
-                                    <label for="add-title" class="form-label"
+                                    <label for="add-title" class="form-label" style="text-align: left; width: 100%;"
                                         >Title</label
                                     >
                                     <input
@@ -73,6 +88,7 @@
                                     <label
                                         for="add-description"
                                         class="form-label"
+                                        style="text-align: left; width: 100%;"
                                         >Description</label
                                     >
                                     <input
@@ -83,7 +99,7 @@
                                     />
                                 </div>
                                 <div class="mb-3">
-                                    <label for="add-status" class="form-label"
+                                    <label for="add-status" class="form-label" style="text-align: left; width: 100%;"
                                         >Status</label
                                     >
                                     <input
@@ -94,7 +110,7 @@
                                     />
                                 </div>
                                 <div class="mb-3">
-                                    <label for="add-remarks" class="form-label"
+                                    <label for="add-remarks" class="form-label" style="text-align: left; width: 100%;"
                                         >Remarks</label
                                     >
                                     <input
@@ -107,7 +123,7 @@
                                 <div class="mb-3">
                                     <label
                                         for="add-dateStart"
-                                        class="form-label"
+                                        class="form-label" style="text-align: left; width: 100%;"
                                         >Date Start</label
                                     >
                                     <input
@@ -118,7 +134,7 @@
                                     />
                                 </div>
                                 <div class="mb-3">
-                                    <label for="add-dateEnd" class="form-label"
+                                    <label for="add-dateEnd" class="form-label" style="text-align: left; width: 100%;"
                                         >Date End</label
                                     >
                                     <input
@@ -135,7 +151,7 @@
                                     class="btn btn-secondary"
                                     data-bs-dismiss="modal"
                                 >
-                                    Close
+                                    Cancel
                                 </button>
                                 <button type="submit" class="btn btn-primary">
                                     Save
@@ -147,9 +163,12 @@
             </div>
 
             <!-- Todo Table -->
-            <div class="table-responsive" style="max-height: 500px; overflow-y: auto; overflow-x: auto;">
+            <div
+                class="table-responsive"
+                style=" max-height: 450px; overflow-y: auto; overflow-x: auto; border: solid 1px rgb(213, 213, 213); border-radius: 10px;"
+            >
                 <table class="table table-bordered table-striped table-hover">
-                    <thead class="thead-dark text-nowrap">
+                    <thead class="thead-dark text-nowrap" style="position: sticky; top: 0; z-index: 1;">
                         <tr>
                             <th>Id</th>
                             <th>Title</th>
@@ -166,10 +185,18 @@
                             <td th:text="${list.id}">Id</td>
                             <td th:text="${list.title}">Title</td>
                             <td th:text="${list.description}">Description</td>
-                            <td th:text="${list.status}">Status</td>
-                            <td th:text="${list.remarks}">Remarks</td>
-                            <td th:text="${list.dateStart}">Date Start</td>
-                            <td th:text="${list.dateEnd}">Date End</td>
+                            <td class="text-nowrap" th:text="${list.status}">
+                                Status
+                            </td>
+                            <td class="text-nowrap" th:text="${list.remarks}">
+                                Remarks
+                            </td>
+                            <td class="text-nowrap" th:text="${list.dateStart}">
+                                Date Start
+                            </td>
+                            <td class="text-nowrap" th:text="${list.dateEnd}">
+                                Date End
+                            </td>
                             <td class="text-nowrap">
                                 <!-- Edit Button -->
                                 <button
@@ -222,6 +249,7 @@
                                                     <h5
                                                         class="modal-title"
                                                         id="editTodoModalLabel"
+                                                        style="text-align: left; width: 100%;"
                                                     >
                                                         Edit Todo
                                                     </h5>
@@ -237,6 +265,7 @@
                                                         <label
                                                             for="edit-title"
                                                             class="form-label"
+                                                            style="text-align: left; width: 100%;"
                                                             >Title</label
                                                         >
                                                         <input
@@ -252,6 +281,7 @@
                                                         <label
                                                             for="edit-description"
                                                             class="form-label"
+                                                            style="text-align: left; width: 100%;"
                                                             >Description</label
                                                         >
                                                         <input
@@ -266,6 +296,7 @@
                                                         <label
                                                             for="edit-status"
                                                             class="form-label"
+                                                            style="text-align: left; width: 100%;"
                                                             >Status</label
                                                         >
                                                         <input
@@ -280,6 +311,7 @@
                                                         <label
                                                             for="edit-remarks"
                                                             class="form-label"
+                                                            style="text-align: left; width: 100%;"
                                                             >Remarks</label
                                                         >
                                                         <input
@@ -294,6 +326,7 @@
                                                         <label
                                                             for="edit-dateStart"
                                                             class="form-label"
+                                                            style="text-align: left; width: 100%;"
                                                             >Date Start</label
                                                         >
                                                         <input
@@ -308,6 +341,7 @@
                                                         <label
                                                             for="edit-dateEnd"
                                                             class="form-label"
+                                                            style="text-align: left; width: 100%;"
                                                             >Date End</label
                                                         >
                                                         <input
@@ -325,7 +359,7 @@
                                                         class="btn btn-secondary"
                                                         data-bs-dismiss="modal"
                                                     >
-                                                        Close
+                                                        Cancel
                                                     </button>
                                                     <button
                                                         type="submit"
