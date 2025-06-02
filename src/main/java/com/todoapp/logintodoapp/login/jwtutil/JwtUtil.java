@@ -3,16 +3,14 @@ package com.todoapp.logintodoapp.login.jwtutil;
 import org.springframework.stereotype.Component;
 import com.todoapp.logintodoapp.login.loginentity.Users;
 
+import java.security.Key;
 import java.util.Date;
 
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
-
-import javax.crypto.SecretKey;
 
 @Component
 public class JwtUtil {
@@ -23,8 +21,9 @@ public class JwtUtil {
         this.jwtConfig = jwtConfig;
     }
 
-    private SecretKey getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(jwtConfig.getSecret());
+    public Key getSigningKey() {
+        String secret = jwtConfig.getSecret();
+        byte[] keyBytes = Decoders.BASE64.decode(secret);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
@@ -34,7 +33,7 @@ public class JwtUtil {
                 .claim("email", users.getEmail())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtConfig.getExpiration()))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .signWith(getSigningKey())
                 .compact();
     }
 
@@ -71,10 +70,11 @@ public class JwtUtil {
     }
 
     private Claims getClaims(String token) {
-        return Jwts.parser()
+        return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
     }
+
 }
