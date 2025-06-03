@@ -10,7 +10,7 @@ public class JwtConfig {
     @Value("${jwt.secret}")
     private String secret;
 
-    @Value("${jwt.expiration}") // in milliseconds
+    @Value("${jwt.expiration}") 
     private long expiration;
 
     public String getSecret() {
