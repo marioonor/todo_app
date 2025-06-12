@@ -154,6 +154,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>todo-app-v2</finalName>
 	</build>
 
 </project>

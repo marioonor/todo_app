@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.todoapp.logintodoapp.login.jwtutil.JwtUtil; // Import JwtUtil
+import com.todoapp.logintodoapp.login.jwtutil.JwtUtil; 
 import com.todoapp.logintodoapp.login.loginentity.Users;
 import com.todoapp.logintodoapp.login.loginservice.UserService;
 import com.todoapp.logintodoapp.login.requests.AuthRequest;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.Date; // Import Date
+import java.util.Date;
 
 @RestController
 @RequestMapping("/auth")
@@ -26,10 +26,11 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @Autowired // Autowire JwtUtil
+    @Autowired
     private JwtUtil jwtUtil;
 
     @CrossOrigin(origins = "http://localhost:4200")
+    // @CrossOrigin(origins = "http://todoapp-front-end.s3-website-us-east-1.amazonaws.com")
     @PostMapping("/register")
     public ResponseEntity<Users> registerUser(@Valid @RequestBody RegisterRequest request) {
         Users registeredUser = userService.registerUser(request);
@@ -37,11 +38,11 @@ public class UserController {
     }
 
     @CrossOrigin(origins = "http://localhost:4200")
+    // @CrossOrigin(origins = "http://todoapp-front-end.s3-website-us-east-1.amazonaws.com")
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> authenticateUser(@Valid @RequestBody AuthRequest request) {
         String token = userService.authenticate(request);
-        Date expirationDate = jwtUtil.extractExpirationDate(token); // Extract expiration date from the token
-        // Pass token and expiration timestamp (in milliseconds) to AuthResponse
+        Date expirationDate = jwtUtil.extractExpirationDate(token);
         return ResponseEntity.ok(new AuthResponse(token, expirationDate.getTime()));
     }
 }

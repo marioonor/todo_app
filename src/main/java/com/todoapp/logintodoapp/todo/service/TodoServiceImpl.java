@@ -34,6 +34,8 @@ public class TodoServiceImpl implements TodoService {
             existingTodo.setRemarks(todo.getRemarks());
             existingTodo.setDateStart(todo.getDateStart());
             existingTodo.setDateEnd(todo.getDateEnd()); 
+            existingTodo.setDueDate(todo.getDueDate());
+            existingTodo.setPriority(todo.getPriority());
         }
         return todoRepository.save(todo);
     }

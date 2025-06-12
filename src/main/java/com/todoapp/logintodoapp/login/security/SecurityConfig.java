@@ -31,7 +31,8 @@ public class SecurityConfig {
             @Override
             public void addCorsMappings(@NonNull CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:4200")
+                        // .allowedOrigins("http://localhost:4200", "http://todoapp-front-end.s3-website-us-east-1.amazonaws.com")
+                        .allowedOrigins("http://localhost:4200") // Allow all origins for simplicity (you can restrict it later)
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
