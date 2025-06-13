@@ -5,18 +5,16 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "project_tbl")
-public class Project {
+public class Subtasks {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, columnDefinition = "TEXT")
-    private String project;
+    private String subtasks;
 
     public Long getId() {
         return id;
@@ -26,12 +24,12 @@ public class Project {
         this.id = id;
     }
 
-    public String getProject() {
-        return project;
+    public String getSubtasks() {
+        return subtasks;
     }
 
-    public void setProject(String project) {
-        this.project = project;
+    public void setSubtasks(String subtasks) {
+        this.subtasks = subtasks;
     }
-
+    
 }

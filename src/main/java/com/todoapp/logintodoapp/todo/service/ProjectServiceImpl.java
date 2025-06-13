@@ -26,11 +26,10 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Project updateProject(Project project) {
-
         Project existingProject = projectRepository.findById(project.getId()).get();
         if (existingProject != null) {
             existingProject.setProject(project.getProject());
-            existingProject.setTask_id(project.getTask_id());
+            // existingProject.setTask_id(project.getTask_id());
         }
         return projectRepository.save(project);
     }
