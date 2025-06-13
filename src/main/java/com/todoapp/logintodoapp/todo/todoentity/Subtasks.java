@@ -16,6 +16,8 @@ public class Subtasks {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String subtasks;
 
+    private boolean completed;
+
     public Long getId() {
         return id;
     }
@@ -30,6 +32,14 @@ public class Subtasks {
 
     public void setSubtasks(String subtasks) {
         this.subtasks = subtasks;
+    }
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
     }
     
 }
