@@ -30,17 +30,20 @@ public class Users {
     @Column(nullable = false, length = 20)
     private String lastName;
 
-    // private String role = "USER"; 
+    @Column(nullable = false, length = 20) // Assuming role is mandatory and has a max length
+    private String role;
 
     public Users() {}
 
-    public Users(Long id, String username, String email, String password, String firstName, String lastName) {
+    public Users(Long id, String username, String email, String password, String firstName, String lastName, String role) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.role = role;
+    
     }
 
     public Long getId() { return id; }
@@ -60,5 +63,8 @@ public class Users {
 
     public String getLastName() { return lastName; }
     public void setLastName(String lastName) { this.lastName = lastName; }
+
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
 
 }

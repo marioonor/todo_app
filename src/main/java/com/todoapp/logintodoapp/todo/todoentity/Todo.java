@@ -27,10 +27,10 @@ public class Todo {
     @Column(columnDefinition = "TEXT")
     private String remarks;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT")
     private String dateStart;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT")
     private String dateEnd;
 
     // Additional fields can be added as needed

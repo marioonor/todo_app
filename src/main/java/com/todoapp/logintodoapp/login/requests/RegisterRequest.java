@@ -28,6 +28,10 @@ public class RegisterRequest {
     @Size(max = 20, message = "Last name must be less than or equal to 20 characters")
     private String lastName;
 
+    @NotBlank(message = "Role cannot be blank")
+    @Size(max = 20, message = "Role must be less than or equal to 20 characters") // Adjust size as needed
+    private String role;
+
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username;}
 
@@ -42,4 +46,7 @@ public class RegisterRequest {
 
     public String getLastName() { return lastName; }
     public void setLastName(String lastName) { this.lastName = lastName; }
+
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
 }
