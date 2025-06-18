@@ -1,6 +1,7 @@
 package com.todoapp.logintodoapp.todo.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import com.todoapp.logintodoapp.todo.todoentity.Todo;
@@ -14,7 +15,7 @@ public interface TodoService {
 
     Todo updateTodo(Todo todo);
 
-    String deleteTodo(Long id);
+    Map<String, String> deleteTodo(Long id);
 
     List<Todo> findAll();
 }

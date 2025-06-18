@@ -35,35 +35,36 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<Project> fetchAllProjects() {
-        return (List<Project>) projectRepository.findAll();
+        return projectRepository.findAll();
     }
 
     @Override
     public Project updateProject(Project project) {
-        Project existingProject = projectRepository.findById(project.getId()).get();
-        if (existingProject != null) {
-            existingProject.setProject(project.getProject());
-            if (project.getUser() != null && project.getUser().getId() != null &&
-                !project.getUser().getId().equals(existingProject.getUser().getId())) {
-                Long newUserId = project.getUser().getId();
-                Users newManagedUser = userRepository.findById(newUserId)
-                        .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + newUserId));
-                existingProject.setUser(newManagedUser);
-            }
+        if (project.getId() == null) {
+            throw new IllegalArgumentException("Project ID must not be null for an update.");
         }
-        return projectRepository.save(project);
+        Project existingProject = projectRepository.findById(project.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Project not found with ID: " + project.getId()));
+
+        existingProject.setProject(project.getProject());
+
+        if (project.getUser() != null && project.getUser().getId() != null &&
+                !project.getUser().getId().equals(existingProject.getUser().getId())) {
+            Long newUserId = project.getUser().getId();
+            Users newManagedUser = userRepository.findById(newUserId)
+                    .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + newUserId));
+            existingProject.setUser(newManagedUser);
+        }
+        return projectRepository.save(existingProject);
     }
 
     @Override
     public String deleteProject(Long id) {
 
-        Project existingProject = projectRepository.findById(id).get();
-        String message = null;
-        if (existingProject != null) {
-            projectRepository.deleteById(id);
-            message = "Project deleted successfully";
-        }
-        return message;
+        Project existingProject = projectRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Project not found with ID: " + id));
+        projectRepository.delete(existingProject); 
+        return "Project deleted successfully";
     }
 
 }

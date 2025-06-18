@@ -1,10 +1,14 @@
 package com.todoapp.logintodoapp.todo.todoentity;
 
+import com.todoapp.logintodoapp.login.loginentity.Users;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -39,6 +43,14 @@ public class Todo {
 
     @Column(nullable = true, columnDefinition = "TEXT")
     private String priority;
+
+    @ManyToOne(optional = false) // Indicates 'todo' field must be non-null for a persistent Subtask
+    @JoinColumn(name = "user_id", nullable = false)
+    private Users user;
+
+    @ManyToOne(optional = false) // Indicates 'todo' field must be non-null for a persistent Subtask
+    @JoinColumn(name = "project_id", nullable = false)
+    private Project project;
 
     public Long getId() {
         return id;
@@ -110,6 +122,22 @@ public class Todo {
 
     public void setPriority(String priority) {
         this.priority = priority;
+    }
+
+    public Users getUser() {
+        return user;
+    }
+
+    public void setUser(Users user) {
+        this.user = user;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
     }
 
 }

@@ -22,7 +22,7 @@ public class Subtasks {
 
     private boolean completed;
 
-     @ManyToOne(optional = false) // Indicates 'todo' field must be non-null for a persistent Subtask
+    @ManyToOne(optional = false) // Indicates 'todo' field must be non-null for a persistent Subtask
     @JoinColumn(name = "todo_id", nullable = false)
     private Todo todo;
 
