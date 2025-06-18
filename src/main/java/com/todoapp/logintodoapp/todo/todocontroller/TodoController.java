@@ -4,6 +4,7 @@ import com.todoapp.logintodoapp.todo.service.TodoService;
 import com.todoapp.logintodoapp.todo.todoentity.Todo;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,9 +46,10 @@ public class TodoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteTodo(@PathVariable Long id) {
+    public ResponseEntity<Map<String, String>> deleteTodo(@PathVariable Long id) {
         todoService.deleteTodo(id);
-        return ResponseEntity.ok("Todo deleted successfully!"); 
+        Map<String, String> response = Map.of("message", "Todo deleted successfully");
+        return ResponseEntity.ok(response); 
     }
     
 }
