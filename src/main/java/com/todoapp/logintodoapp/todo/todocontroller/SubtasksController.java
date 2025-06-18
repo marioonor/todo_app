@@ -1,6 +1,7 @@
 package com.todoapp.logintodoapp.todo.todocontroller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,13 +19,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-
-
-
 @RestController
 @RequestMapping("/api/subtasks")
 public class SubtasksController {
-    
+
     @Autowired
     private SubtasksService subtasksService;
 
@@ -38,18 +36,19 @@ public class SubtasksController {
     public ResponseEntity<List<Subtasks>> fetchAllSubtasks() {
         return ResponseEntity.ok(subtasksService.fetchAllSubtasks());
     }
-    
+
     @PutMapping("/{id}")
     public ResponseEntity<Subtasks> updateSubtasks(@PathVariable("id") Long id, @RequestBody Subtasks subtasks) {
         subtasks.setId(id);
         Subtasks updatedSubtask = subtasksService.updateSubtasks(subtasks);
         return ResponseEntity.ok(updatedSubtask);
-    }   
+    }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteSubtasks(@PathVariable("id") Long id) {
+    public ResponseEntity<Map<String, String>> deleteSubtasks(@PathVariable("id") Long id) {
         subtasksService.deleteSubtasks(id);
-        return ResponseEntity.ok("Subtask deleted successfully");    
+        Map<String, String> response = Map.of("message", "Subtask deleted successfully! ID: " + id);
+        return ResponseEntity.ok(response);
     }
 
 }
