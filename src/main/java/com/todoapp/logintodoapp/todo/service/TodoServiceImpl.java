@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
 import com.todoapp.logintodoapp.login.loginentity.Users;
@@ -71,6 +70,7 @@ public class TodoServiceImpl implements TodoService {
         existingTodo.setDateEnd(todo.getDateEnd());
         existingTodo.setDueDate(todo.getDueDate());
         existingTodo.setPriority(todo.getPriority());
+        existingTodo.setOrder(todo.getOrder()); 
 
         // Handle user update
         if (todo.getUser() != null && todo.getUser().getId() != null) {

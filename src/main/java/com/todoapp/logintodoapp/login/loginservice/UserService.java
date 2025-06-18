@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.todoapp.logintodoapp.login.jwtutil.JwtUtil;
 import com.todoapp.logintodoapp.login.loginentity.Users;
 import com.todoapp.logintodoapp.login.loginrepository.UserRepository;
 import com.todoapp.logintodoapp.login.requests.AuthRequest;
