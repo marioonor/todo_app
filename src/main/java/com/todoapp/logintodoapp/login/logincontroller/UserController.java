@@ -51,10 +51,10 @@ public class UserController {
         AuthResponse authResponse = new AuthResponse(
                 user.getId(),
                 user.getUsername(),
-                user.getEmail(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getRole(),
+                // user.getEmail(),
+                // user.getFirstName(),
+                // user.getLastName(),
+                // user.getRole(),
                 token,
                 expirationDate.getTime());
         return ResponseEntity.ok(authResponse);

@@ -1,5 +1,7 @@
 package com.todoapp.logintodoapp.login.loginentity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,15 +21,19 @@ public class Users {
     private String username;
 
     @Column(nullable = false, unique = true, length = 50)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String email;
 
     @Column(nullable = false, length = 70)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Column(nullable = false, length = 20)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String firstName;
 
     @Column(nullable = false, length = 20)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String lastName;
 
     @Column(nullable = false, length = 20) // Assuming role is mandatory and has a max length
