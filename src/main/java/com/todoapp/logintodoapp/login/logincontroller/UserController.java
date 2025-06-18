@@ -39,10 +39,24 @@ public class UserController {
 
     @CrossOrigin(origins = "http://localhost:4200")
     // @CrossOrigin(origins = "http://todoapp-front-end.s3-website-us-east-1.amazonaws.com")
+    
+    // public ResponseEntity<AuthResponse> authenticateUser(@Valid @RequestBody AuthRequest request) {
+    //     String token = userService.authenticate(request);
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> authenticateUser(@Valid @RequestBody AuthRequest request) {
-        String token = userService.authenticate(request);
+    public ResponseEntity<AuthResponse> authenticateUser(@Valid @RequestBody AuthRequest authRequest) {
+        Users user = userService.authenticate(authRequest);
+        String token = jwtUtil.generateToken(user);
         Date expirationDate = jwtUtil.extractExpirationDate(token);
-        return ResponseEntity.ok(new AuthResponse(token, expirationDate.getTime()));
+        // return ResponseEntity.ok(new AuthResponse(token, expirationDate.getTime()));
+        AuthResponse authResponse = new AuthResponse(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getRole(),
+                token,
+                expirationDate.getTime());
+        return ResponseEntity.ok(authResponse);
     }
 }

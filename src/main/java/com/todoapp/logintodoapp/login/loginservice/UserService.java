@@ -19,8 +19,8 @@ public class UserService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    @Autowired
-    JwtUtil jwtUtil;
+    // @Autowired
+    // JwtUtil jwtUtil;
 
     public Users registerUser(RegisterRequest request) {
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
@@ -40,7 +40,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public String authenticate(AuthRequest request) {
+    public Users authenticate(AuthRequest request) {
         Users user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -48,6 +48,7 @@ public class UserService {
             throw new RuntimeException("Invalid credentials");
         }
 
-        return jwtUtil.generateToken(user);
+        // return jwtUtil.generateToken(user);
+        return user;
     }
 }
