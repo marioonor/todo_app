@@ -1,5 +1,6 @@
 package com.todoapp.logintodoapp.login.jwtutil;
 
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import com.todoapp.logintodoapp.login.loginentity.Users;
 
@@ -75,6 +76,11 @@ public class JwtUtil {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+    }
+
+    public boolean validateToken(String token, UserDetails userDetails) {
+        final String username = extractUsername(token);
+        return (username != null && username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
 }
