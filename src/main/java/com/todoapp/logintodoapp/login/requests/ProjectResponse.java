@@ -6,17 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class AuthResponse {
-
+public class ProjectResponse {
     private Long id;
-
+    private String project;
+    private Long userId;
     private String username;
-
-    private String role;
-
-    private String token;
-
 }
+

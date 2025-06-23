@@ -4,18 +4,16 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.todoapp.logintodoapp.todo.todoentity.Project;
+import com.todoapp.logintodoapp.login.dto.ProjectDTO;
 
 @Service
 public interface ProjectService {
     
-    Project addProject(Project project);
+    ProjectDTO addProject(ProjectDTO projectDTO);
 
-    List<Project> fetchAllProjects();
+    List<ProjectDTO> fetchAllProjects();
 
-    Project updateProject(Project project);
+    ProjectDTO updateProject(Long id, ProjectDTO projectDTO);
 
-    String deleteProject(Long id);
-
-    // List<Project> findAll();
+    void deleteProject(Long id);
 }

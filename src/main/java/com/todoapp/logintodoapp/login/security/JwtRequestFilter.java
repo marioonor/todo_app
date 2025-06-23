@@ -3,15 +3,23 @@ package com.todoapp.logintodoapp.login.security;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.security.SignatureException;
+
 import com.todoapp.logintodoapp.login.jwtutil.JwtUtil;
+import com.todoapp.logintodoapp.todo.service.TokenBlacklistService;
+
+import io.jsonwebtoken.ExpiredJwtException;
 
 import java.io.IOException;
 import jakarta.servlet.FilterChain;
@@ -24,10 +32,14 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtRequestFilter.class);
     @Autowired
+    @Qualifier("customUserDetailsService")
     private UserDetailsService userDetailsService;
 
     @Autowired
     private JwtUtil jwtUtil;
+
+    @Autowired
+    private TokenBlacklistService tokenBlacklistService;
 
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
@@ -39,53 +51,56 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
-            logger.info("JWT Token from header: " + jwt);
+            logger.debug("JWT Token from header: {}", jwt);
+            if (tokenBlacklistService.isTokenBlacklisted(jwt)) {
+                logger.warn("Token is blacklisted: {}", jwt);
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token is blacklisted");
+                return;
+            }
             try {
                 username = jwtUtil.extractUsername(jwt);
-                logger.info("Extracted username: " + username);
-            } catch (Exception e) {
-                logger.warn("JWT token processing error during username extraction: " + e.getMessage(), e);
+                logger.debug("Extracted username from token: {}", username);
+            } catch (IllegalArgumentException ex) {
+                logger.error("Unable to get JWT token: {}", ex.getMessage());
+            } catch (ExpiredJwtException ex) {
+                logger.warn("JWT token has expired: {}", ex.getMessage());
+            } catch (SignatureException ex) {
+                logger.warn("JWT signature does not match locally computed signature: {}", ex.getMessage());
+            } catch (MalformedJwtException ex) {
+                logger.warn("JWT token is malformed: {}", ex.getMessage());
             }
         } else {
-            logger.warn("Authorization header missing or does not start with Bearer for request URI: "
-                    + request.getRequestURI());
+            logger.debug("Authorization header missing or does not start with Bearer for request URI: {}",
+                    request.getRequestURI());
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            logger.info("Attempting to load UserDetails for username: " + username);
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+            logger.debug("Attempting to load UserDetails for username: {}", username);
+            UserDetails userDetails;
+            try {
+                userDetails = this.userDetailsService.loadUserByUsername(username);
+            } catch (UsernameNotFoundException e) {
+                logger.warn("User '{}' found in JWT but not in the database. They may have been deleted.", username);
+                // Stop processing and continue the filter chain. The user will remain
+                // unauthenticated.
+                filterChain.doFilter(request, response);
+                return;
+            }
 
-            boolean isValidToken = jwtUtil.validateToken(jwt, userDetails);
-            logger.info("Token validation result for username " + username + ": " + isValidToken);
-
-            if (isValidToken) {
+            if (jwtUtil.validateToken(jwt, userDetails)) {
+                logger.debug("Token validated successfully for username: {}", username);
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                 usernamePasswordAuthenticationToken
                         .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-                logger.info("Authentication set in SecurityContext for user: " + username);
+                logger.info("Authentication set in SecurityContext for user: {}", username);
             } else {
-                logger.warn("Token validation failed for user: " + username + ". JWT: " + jwt);
-            }
-        } else {
-            // Handle cases where username is null or user is already authenticated
-            if (username == null && jwt != null) {
-                // This case means username extraction failed but a token was present.
-                logger.warn("Username could not be extracted from JWT, authentication context not set. JWT: " + jwt);
-            } else if (SecurityContextHolder.getContext().getAuthentication() != null) {
-                // This case means user is already authenticated.
-                logger.debug("User " + SecurityContextHolder.getContext().getAuthentication().getName()
-                        + " already authenticated, skipping JWT processing for this filter for URI: "
-                        + request.getRequestURI());
-            } else if (jwt == null
-                    && (request.getRequestURI() != null && !request.getRequestURI().startsWith("/auth/"))) {
-                // No JWT and not an auth path.
-                logger.debug("No JWT present in Authorization header for non-auth request URI: "
-                        + request.getRequestURI() + ", proceeding without setting authentication context from JWT.");
+                logger.warn("Invalid JWT token for user: {}. Token: {}", username, jwt);
             }
         }
 
         filterChain.doFilter(request, response);
+
     }
 }

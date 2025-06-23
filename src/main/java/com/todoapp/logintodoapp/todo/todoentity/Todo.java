@@ -44,9 +44,6 @@ public class Todo {
     @Column(nullable = true, columnDefinition = "TEXT")
     private String priority;
 
-    @Column(name = "item_order") // Use a different column name if "order" is a reserved keyword
-    private Integer order;
-
     @ManyToOne(optional = false) // Indicates 'todo' field must be non-null for a persistent Subtask
     @JoinColumn(name = "user_id", nullable = false)
     private Users user;
@@ -142,6 +139,9 @@ public class Todo {
     public void setProject(Project project) {
         this.project = project;
     }
+
+    @Column(name = "todo_order")
+    private Integer order;
 
     public Integer getOrder() {
         return order;
