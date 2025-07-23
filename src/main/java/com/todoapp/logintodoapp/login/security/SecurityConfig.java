@@ -67,10 +67,6 @@ public class SecurityConfig {
     @Bean
     public ModelMapper modelMapper() {
         ModelMapper modelMapper = new ModelMapper();
-
-        // This simplified PropertyMap tells ModelMapper to skip mapping the ID, User, and Project,
-        // as those are handled manually in the service layer. It will correctly auto-map
-        // all other fields like 'title', 'description', etc., based on matching names.
         modelMapper.addMappings(new PropertyMap<TodoRequest, Todo>() {
             @Override
             protected void configure() {
@@ -83,12 +79,12 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200")); // Your Angular app's origin
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200")); 
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
-        configuration.setAllowCredentials(true); // Important for cookies, authorization headers with HTTPS
+        configuration.setAllowCredentials(true); 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration); // Apply this configuration to all paths
+        source.registerCorsConfiguration("/**", configuration); 
         return source;
     }
 }

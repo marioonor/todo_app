@@ -46,19 +46,16 @@ public class UserController {
 
     private final TokenBlacklistService tokenBlacklistService;
 
-    // @CrossOrigin(origins = "http://localhost:4200")
     // @CrossOrigin(origins = "http://todoapp-front-end.s3-website-us-east-1.amazonaws.com")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/register")
     public AuthResponse registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
         log.info("API /register is called for user: {}", registerRequest.getUsername());
-        UserDTO userDTO = mapToProfileDTO(registerRequest); // Use RegisterRequest here
-        UserDTO createdUser = userService.createProfile(userDTO); // Pass the mapped DTO and get the created one
+        UserDTO userDTO = mapToProfileDTO(registerRequest); 
+        UserDTO createdUser = userService.createProfile(userDTO); 
         log.info("Printing the created profile dto details {}", createdUser);
         return mapToProfileResponse(createdUser);
     }
-
-    // @CrossOrigin(origins = "http://localhost:4200")
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> loginUser(@Valid @RequestBody AuthRequest authRequest) {
@@ -73,19 +70,14 @@ public class UserController {
         }
 
         Users authenticatedUser = userRepository.findByUsername(authRequest.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found after authentication")); // Should not happen if authentication succeeded
-
+                .orElseThrow(() -> new RuntimeException("User not found after authentication")); 
         final String token = jwtUtil.generateToken(authenticatedUser);
-        
-//  UserDTO userDetailsDto = modelMapper.map(authenticatedUser, UserDTO.class);
 
         AuthResponse authResponse = AuthResponse.builder()
-                                        // .username(userDetailsDto.getUsername())
-                                        // .role(userDetailsDto.getRole())
                                         .id(authenticatedUser.getId())
                                         .username(authenticatedUser.getUsername())
                                         .role(authenticatedUser.getRole())
-                                        .token(token) // Ensure AuthResponse has a 'token' field
+                                        .token(token) 
                                         .build();
         log.info("User {} logged in successfully.", authRequest.getUsername());
         return ResponseEntity.ok(authResponse);
@@ -98,7 +90,7 @@ public class UserController {
 
         if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
             String jwtToken = requestTokenHeader.substring(7);
-            if (jwtToken != null && !tokenBlacklistService.isTokenBlacklisted(jwtToken)) { // Check if already blacklisted
+            if (jwtToken != null && !tokenBlacklistService.isTokenBlacklisted(jwtToken)) { 
                 tokenBlacklistService.addTokenToBlacklist(jwtToken);
                 log.info("Token blacklisted successfully for logout.");
                 return ResponseEntity.ok("Logged out successfully.");
